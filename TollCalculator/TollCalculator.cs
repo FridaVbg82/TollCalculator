@@ -14,8 +14,15 @@ public class TollCalculator(ITollFreeProvider tollFreeProvider)
  */
     public int GetTollFee(Vehicle vehicle, DateTime[] dates)
     {
+        if (dates.Length == 0) 
+            return 0;
+        
+        if (IsMultipleDays(dates)) 
+            throw new ArgumentException("Dates span multiple days");
+        
         DateTime intervalStart = dates[0];
-        if (tollFreeProvider.IsTollFreeDate(intervalStart) || tollFreeProvider.IsTollFreeVehicle(vehicle)) return 0;
+        if (tollFreeProvider.IsTollFreeDate(intervalStart) || tollFreeProvider.IsTollFreeVehicle(vehicle)) 
+            return 0;
 
         int totalFee = 0;
         foreach (DateTime timeOfPassage in dates)
@@ -59,5 +66,10 @@ public class TollCalculator(ITollFreeProvider tollFreeProvider)
             18 => timeOfPassage.Minute < 30 ? 8 : 0,
             _ => 0,
         };
+    }
+
+    private bool IsMultipleDays(IEnumerable<DateTime> dates)
+    {
+        return dates.DistinctBy(date => date.Date).Count() != 1;
     }
 }
