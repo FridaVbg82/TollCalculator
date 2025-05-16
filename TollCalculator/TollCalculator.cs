@@ -1,12 +1,11 @@
-﻿using TollCalculator.TollFree;
+﻿using TollCalculator.Common;
+using TollCalculator.TollFree;
 using TollFeeCalculator;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TollCalculator;
 
 public class TollCalculator(ITollFreeDecider tollFreeDecider)
 {
-
     /**
  * Calculate the total toll fee for one day
  *
@@ -14,8 +13,6 @@ public class TollCalculator(ITollFreeDecider tollFreeDecider)
  * @param dates   - date and time of all passes on one day
  * @return - the total toll fee for that day
  */
-    const int DAILY_MAXIMUM_FEE = 60;
-    const int HOUR_IN_MINUTES = 60;
     public int GetTollFee(Vehicle vehicle, DateTime[] dates)
     {
         DateTime intervalStart = dates[0];
@@ -30,7 +27,7 @@ public class TollCalculator(ITollFreeDecider tollFreeDecider)
             long diffInMillies = timeOfPassage.Millisecond - intervalStart.Millisecond;
             long minutes = diffInMillies/1000/60;
 
-            if (minutes <= HOUR_IN_MINUTES)
+            if (minutes <= Constants.HOUR_IN_MINUTES)
             {
                 if (totalFee > 0) totalFee -= tempFee;
                 if (nextFee >= tempFee) tempFee = nextFee;
@@ -41,9 +38,9 @@ public class TollCalculator(ITollFreeDecider tollFreeDecider)
                 totalFee += nextFee;
             }
         }
-        if (totalFee > DAILY_MAXIMUM_FEE)
+        if (totalFee > Constants.DAILY_MAXIMUM_FEE)
         {
-            totalFee = DAILY_MAXIMUM_FEE;
+            totalFee = Constants.DAILY_MAXIMUM_FEE;
         }
 
         return totalFee;
