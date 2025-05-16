@@ -11,10 +11,15 @@ namespace TollCalculator.TollFree
     {
         public bool IsTollFreeDate(DateTime dateTime)
         {
+            if (IsWeekend(dateTime) ||
+                IsTollFreeMonth(dateTime) ||
+                IsHoliday(dateTime)) return true;
+
+
             int year = dateTime.Year;
             int month = dateTime.Month;
             int day = dateTime.Day;
-            if (dateTime.DayOfWeek == DayOfWeek.Saturday || dateTime.DayOfWeek == DayOfWeek.Sunday) return true;
+            
 
             if (year == 2013)
             {
@@ -44,5 +49,16 @@ namespace TollCalculator.TollFree
                 Vehicle.Military => true,
                 _ => false
             };
+
+        private bool IsWeekend(DateTime date) => 
+            date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday;
+
+        private bool IsHoliday(DateTime date)
+        {
+            return false;
+        }
+
+        private bool IsTollFreeMonth(DateTime date) =>
+            date.Month == 7;
     }
 }
