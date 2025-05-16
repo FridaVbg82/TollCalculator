@@ -1,10 +1,9 @@
 ﻿using TollCalculator.Common;
 using TollCalculator.TollFree;
-using TollFeeCalculator;
 
 namespace TollCalculator;
 
-public class TollCalculator(ITollFreeDecider tollFreeDecider)
+public class TollCalculator(ITollFreeProvider tollFreeProvider)
 {
     /**
  * Calculate the total toll fee for one day
@@ -16,7 +15,7 @@ public class TollCalculator(ITollFreeDecider tollFreeDecider)
     public int GetTollFee(Vehicle vehicle, DateTime[] dates)
     {
         DateTime intervalStart = dates[0];
-        if (tollFreeDecider.IsTollFreeDate(intervalStart) || tollFreeDecider.IsTollFreeVehicle(vehicle)) return 0;
+        if (tollFreeProvider.IsTollFreeDate(intervalStart) || tollFreeProvider.IsTollFreeVehicle(vehicle)) return 0;
 
         int totalFee = 0;
         foreach (DateTime timeOfPassage in dates)

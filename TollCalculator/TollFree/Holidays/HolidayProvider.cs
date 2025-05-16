@@ -70,7 +70,7 @@ public class HolidayProvider : IHolidayProvider
         return new List<DateTime>
         {
             new DateTime(year, 1, 1),
-            new DateTime(year, 6, 1),
+            new DateTime(year, 1, 6),
             new DateTime(year, 6, 6),
             new DateTime(year, 12, 24),
             new DateTime(year, 12, 25),

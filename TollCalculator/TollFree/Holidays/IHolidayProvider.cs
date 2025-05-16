@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TollCalculator.TollFree.Holidays
 {
-    internal interface IHolidayProvider
+    public interface IHolidayProvider
     {
         /// <summary>
         /// Gets a list of holidays for the given year.
