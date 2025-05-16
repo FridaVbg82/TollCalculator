@@ -49,7 +49,7 @@ public class TollCalculator(ITollFreeDecider tollFreeDecider)
         return totalFee;
     }
 
-    public int GetTollFeeForTime(DateTime timeOfPassage)
+    private int GetTollFeeForTime(DateTime timeOfPassage)
     {
         return timeOfPassage.Hour switch
         {
