@@ -1,4 +1,5 @@
-﻿using TollCalculator.Common;
+﻿using System;
+using TollCalculator.Common;
 using TollCalculator.TollFree;
 
 namespace TollCalculator;
@@ -12,44 +13,37 @@ public class TollCalculator(ITollFreeProvider tollFreeProvider)
  * @param dates   - date and time of all passes on one day
  * @return - the total toll fee for that day
  */
-    public int GetTollFee(Vehicle vehicle, DateTime[] dates)
+    public int GetTollFee(Vehicle vehicle, IEnumerable<DateTime> dates)
     {
-        if (dates.Length == 0) 
+        if (!dates.Any()) 
             return 0;
-        
+
+        // Make sure the dates are in order
+        dates = dates.OrderBy(date => date);
+
         if (IsMultipleDays(dates)) 
             throw new ArgumentException("Dates span multiple days");
-        
-        DateTime intervalStart = dates[0];
-        if (tollFreeProvider.IsTollFreeDate(intervalStart) || tollFreeProvider.IsTollFreeVehicle(vehicle)) 
+
+        if (tollFreeProvider.IsTollFreeDate(dates.First()) || tollFreeProvider.IsTollFreeVehicle(vehicle)) 
             return 0;
 
-        int totalFee = 0;
-        foreach (DateTime timeOfPassage in dates)
+        var fee = 0;
+        foreach (var hourlyPassages in SplitDateTimeOnHour(dates))
         {
-            int nextFee = GetTollFeeForTime(timeOfPassage);
-            int tempFee = GetTollFeeForTime(intervalStart);
-
-            long diffInMillies = timeOfPassage.Millisecond - intervalStart.Millisecond;
-            long minutes = diffInMillies/1000/60;
-
-            if (minutes <= Constants.HOUR_IN_MINUTES)
-            {
-                if (totalFee > 0) totalFee -= tempFee;
-                if (nextFee >= tempFee) tempFee = nextFee;
-                totalFee += tempFee;
-            }
-            else
-            {
-                totalFee += nextFee;
-            }
-        }
-        if (totalFee > Constants.DAILY_MAXIMUM_FEE)
-        {
-            totalFee = Constants.DAILY_MAXIMUM_FEE;
+            fee += CalculateFeeForHour(hourlyPassages);
         }
 
-        return totalFee;
+        return Math.Min(fee, Constants.DAILY_MAXIMUM_FEE);
+    }
+
+    private int CalculateFeeForHour(List<DateTime> hourlyPassages)
+    {
+        List<int> fee = new List<int>();
+        foreach (var time in hourlyPassages)
+        {
+            fee.Add(GetTollFeeForTime(time));
+        } 
+        return fee.Max();
     }
 
     private int GetTollFeeForTime(DateTime timeOfPassage)
@@ -68,8 +62,32 @@ public class TollCalculator(ITollFreeProvider tollFreeProvider)
         };
     }
 
-    private bool IsMultipleDays(IEnumerable<DateTime> dates)
+    private static bool IsMultipleDays(IEnumerable<DateTime> dates)
     {
         return dates.DistinctBy(date => date.Date).Count() != 1;
+    }
+
+    static List<List<DateTime>> SplitDateTimeOnHour(IEnumerable<DateTime> dateTimes)
+    {
+        List<List<DateTime>> hourlyPassageList = new List<List<DateTime>>();
+        List<DateTime> currentHourList = new List<DateTime>();
+
+        foreach (var date in dateTimes)
+        {
+            if (currentHourList.Count > 0 && (date - currentHourList.Last()) > TimeSpan.FromHours(1))
+            {
+                hourlyPassageList.Add(currentHourList);
+                currentHourList = new List<DateTime>();
+            }
+
+            currentHourList.Add(date);
+        }
+
+        if (currentHourList.Count > 0)
+        {
+            hourlyPassageList.Add(currentHourList);
+        }
+
+        return hourlyPassageList;
     }
 }
