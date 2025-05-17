@@ -13,7 +13,7 @@ namespace TollCalculator.TollFree
         public bool IsTollFreeDate(DateTime dateTime) =>
             IsWeekend(dateTime) ||
             IsTollFreeMonth(dateTime) ||
-            IsHoliday(dateTime);
+            IsHolidayOrDayBefore(dateTime);
 
         public bool IsTollFreeVehicle(Vehicle vehicle) =>
             vehicle switch
@@ -28,10 +28,12 @@ namespace TollCalculator.TollFree
             };
 
         private bool IsWeekend(DateTime date) => 
-            date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday;
+            date.DayOfWeek == DayOfWeek.Saturday || 
+            date.DayOfWeek == DayOfWeek.Sunday;
 
-        private bool IsHoliday(DateTime date) => 
-            holidayProvider.GetHolidays(date.Year).Any(holiday => holiday.Date == date);
+        private bool IsHolidayOrDayBefore(DateTime date) => 
+            holidayProvider.GetHolidays(date.Year).Any(holiday => holiday.Date == date) ||
+            holidayProvider.IsDayBeforeHoliday(date);
 
         private bool IsTollFreeMonth(DateTime date) =>
             date.Month == Constants.TOLLFREE_MONTH;

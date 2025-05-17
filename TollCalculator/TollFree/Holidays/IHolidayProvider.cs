@@ -13,6 +13,8 @@ namespace TollCalculator.TollFree.Holidays
         /// </summary>
         /// <param name="year">The year for the holidays.</param>>
         /// <returns>A list of holidays.</returns>
-        IEnumerable<DateTime> GetHolidays(int year);
+        public IEnumerable<DateTime> GetHolidays(int year);
+
+        public bool IsDayBeforeHoliday(DateTime date);
     }
 }

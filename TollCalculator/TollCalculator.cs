@@ -15,15 +15,14 @@ public class TollCalculator(ITollFreeProvider tollFreeProvider)
  */
     public int GetTollFee(Vehicle vehicle, IEnumerable<DateTime> dates)
     {
-        if (!dates.Any()) 
-            return 0;
-
-        // Make sure the dates are in order
-        dates = dates.OrderBy(date => date);
+        if (!dates.Any())
+            throw new ArgumentException("Expected at least one date");
 
         if (IsMultipleDays(dates)) 
             throw new ArgumentException("Dates span multiple days");
 
+        // Make sure the dates are in order
+        dates = dates.OrderBy(date => date);
         if (tollFreeProvider.IsTollFreeDate(dates.First()) || tollFreeProvider.IsTollFreeVehicle(vehicle)) 
             return 0;
 

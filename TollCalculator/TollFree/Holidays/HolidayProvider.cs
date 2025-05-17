@@ -12,11 +12,19 @@ public class HolidayProvider : IHolidayProvider
         var holidays = new List<DateTime>();
         holidays.AddRange(GetFixedHolidays(year));
         holidays.AddRange(GetEasterHolidayDates(year));
-        holidays.AddRange(GetMidsummerDates(year));
+        holidays.Add(GetMidsummersDayDate(year));
         return holidays.Distinct().OrderBy(date => date);
     }
 
-    private static IEnumerable<DateTime> GetEasterHolidayDates(int year)
+    public bool IsDayBeforeHoliday(DateTime date)
+    {
+        var daysBeforeHoliday = new List<DateTime>();
+        daysBeforeHoliday.AddRange(GetDaysBeforeFixedHolidays(date.Year));
+        daysBeforeHoliday.AddRange(GetDaysBeforeDynamicHolidays(date.Year));
+        return daysBeforeHoliday.Any(dayBeforeHoliday => dayBeforeHoliday.Date == date);
+    }
+
+    private IEnumerable<DateTime> GetEasterHolidayDates(int year)
     {
         DateTime easterSunday = GetEasterSunday(year);
         return new List<DateTime>
@@ -30,7 +38,7 @@ public class HolidayProvider : IHolidayProvider
         };
     }
 
-    private static DateTime GetEasterSunday(int year)
+    private DateTime GetEasterSunday(int year)
     {
         int a = year % 19;
         int b = year / 100;
@@ -50,22 +58,18 @@ public class HolidayProvider : IHolidayProvider
         return new DateTime(year, month, day);
     }
 
-    private static IEnumerable<DateTime> GetMidsummerDates(int year)
+    private DateTime GetMidsummersDayDate(int year)
     {
         DateTime june19 = new DateTime(year, 6, 19);
         while (june19.DayOfWeek != DayOfWeek.Friday)
         {
             june19 = june19.AddDays(1);
         }
-        
-        return new List<DateTime>
-        {
-            june19, // Midsommarafton
-            june19.AddDays(1), // Midsommardagen
-        };
+
+        return june19.AddDays(1);
     }
 
-    private static IEnumerable<DateTime> GetFixedHolidays(int year)
+    private IEnumerable<DateTime> GetFixedHolidays(int year)
     {
         return new List<DateTime>
         {
@@ -76,6 +80,31 @@ public class HolidayProvider : IHolidayProvider
             new DateTime(year, 12, 25),
             new DateTime(year, 12, 26),
             new DateTime(year, 12, 31)
+        };
+    }
+
+    private IEnumerable<DateTime> GetDaysBeforeFixedHolidays(int year)
+    {
+        return new List<DateTime>
+        {
+            new DateTime(year, 1, 5),
+            new DateTime(year, 6, 5),
+            new DateTime(year, 12, 23),
+            new DateTime(year, 12, 30),
+        };
+    }
+
+    private IEnumerable<DateTime> GetDaysBeforeDynamicHolidays(int year)
+    {
+        var easterSunday = GetEasterSunday(year);
+        var midsummerDay = GetMidsummersDayDate(year);
+
+        return new List<DateTime>
+        {
+            easterSunday.AddDays(-3),
+            easterSunday.AddDays(38),
+            easterSunday.AddDays(48),
+            midsummerDay.AddDays(-1)
         };
     }
 }
