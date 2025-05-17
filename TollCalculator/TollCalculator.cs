@@ -15,11 +15,7 @@ public class TollCalculator(ITollFreeProvider tollFreeProvider)
  */
     public int GetTollFee(Vehicle vehicle, IEnumerable<DateTime> dates)
     {
-        if (!dates.Any())
-            throw new ArgumentException("Expected at least one date");
-
-        if (IsMultipleDays(dates)) 
-            throw new ArgumentException("Dates span multiple days");
+        ValidateDateRange(dates);
 
         // Make sure the dates are in order
         dates = dates.OrderBy(date => date);
@@ -33,6 +29,15 @@ public class TollCalculator(ITollFreeProvider tollFreeProvider)
         }
 
         return Math.Min(fee, Constants.DAILY_MAXIMUM_FEE);
+    }
+
+    private static void ValidateDateRange(IEnumerable<DateTime> dates)
+    {
+        if (!dates.Any())
+            throw new ArgumentException("Expected at least one date");
+
+        if (IsMultipleDays(dates)) 
+            throw new ArgumentException("Dates span multiple days");
     }
 
     private int CalculateFeeForHour(List<DateTime> hourlyPassages)
@@ -73,7 +78,7 @@ public class TollCalculator(ITollFreeProvider tollFreeProvider)
 
         foreach (var date in dateTimes)
         {
-            if (currentHourList.Count > 0 && (date - currentHourList.Last()) > TimeSpan.FromHours(1))
+            if (currentHourList.Count > 0 && (date - currentHourList.First()) > TimeSpan.FromHours(1))
             {
                 hourlyPassageList.Add(currentHourList);
                 currentHourList = new List<DateTime>();
