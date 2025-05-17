@@ -13,6 +13,7 @@ public class HolidayProvider : IHolidayProvider
         holidays.AddRange(GetFixedHolidays(year));
         holidays.AddRange(GetEasterHolidayDates(year));
         holidays.Add(GetMidsummersDayDate(year));
+        holidays.Add(GetAllSaintsDayDate(year));
         return holidays.Distinct().OrderBy(date => date);
     }
 
@@ -60,13 +61,24 @@ public class HolidayProvider : IHolidayProvider
 
     private DateTime GetMidsummersDayDate(int year)
     {
-        DateTime june19 = new DateTime(year, 6, 19);
-        while (june19.DayOfWeek != DayOfWeek.Friday)
+        DateTime midsummersDayDate = new DateTime(year, 6, 19);
+        while (midsummersDayDate.DayOfWeek != DayOfWeek.Friday)
         {
-            june19 = june19.AddDays(1);
+            midsummersDayDate = midsummersDayDate.AddDays(1);
         }
 
-        return june19.AddDays(1);
+        return midsummersDayDate.AddDays(1);
+    }
+
+    private DateTime GetAllSaintsDayDate(int year)
+    {
+        DateTime allSaintsDayDate = new DateTime(year, 10, 31);
+        while (allSaintsDayDate.DayOfWeek != DayOfWeek.Saturday)
+        {
+            allSaintsDayDate = allSaintsDayDate.AddDays(1);
+        }
+
+        return allSaintsDayDate;
     }
 
     private IEnumerable<DateTime> GetFixedHolidays(int year)
@@ -98,13 +110,15 @@ public class HolidayProvider : IHolidayProvider
     {
         var easterSunday = GetEasterSunday(year);
         var midsummerDay = GetMidsummersDayDate(year);
+        var allSaintsDay = GetAllSaintsDayDate(year);
 
         return new List<DateTime>
         {
             easterSunday.AddDays(-3),
             easterSunday.AddDays(38),
             easterSunday.AddDays(48),
-            midsummerDay.AddDays(-1)
+            midsummerDay.AddDays(-1),
+            allSaintsDay.AddDays(-1)
         };
     }
 }

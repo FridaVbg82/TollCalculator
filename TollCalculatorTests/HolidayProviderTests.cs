@@ -21,6 +21,17 @@ public class HolidayProviderTests
     }
 
     [Fact]
+    public void GetHolidays_Returns_AllSaintsDay()
+    {
+        GivenHolidayProvider();
+        WhenGettingHolidaysFor(2025);
+        ThenResultContains(new List<DateTime>
+        {
+            new DateTime(2025, 11, 1)
+        });
+    }
+
+    [Fact]
     public void GetHolidays_Ordinary_Year_Returns_EasterDates()
     {
         GivenHolidayProvider();
