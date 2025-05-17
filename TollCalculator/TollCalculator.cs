@@ -4,7 +4,7 @@ using TollCalculator.TollFree;
 
 namespace TollCalculator;
 
-public class TollCalculator(ITollFreeProvider tollFreeProvider)
+public class TollCalculator(ITollFreeService tollFreeService)
 {
     /**
  * Calculate the total toll fee for one day
@@ -19,7 +19,7 @@ public class TollCalculator(ITollFreeProvider tollFreeProvider)
 
         // Make sure the dates are in order
         dates = dates.OrderBy(date => date);
-        if (tollFreeProvider.IsTollFreeDate(dates.First()) || tollFreeProvider.IsTollFreeVehicle(vehicle)) 
+        if (tollFreeService.IsTollFreeDate(dates.First()) || tollFreeService.IsTollFreeVehicle(vehicle)) 
             return 0;
 
         var fee = 0;

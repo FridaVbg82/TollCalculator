@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TollCalculator.TollFree
 {
-    public interface ITollFreeProvider
+    public interface ITollFreeService
     {
         bool IsTollFreeDate(DateTime dateTime);
         bool IsTollFreeVehicle(Vehicle vehicle);

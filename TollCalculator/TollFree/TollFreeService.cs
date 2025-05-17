@@ -8,7 +8,7 @@ using TollCalculator.TollFree.Holidays;
 
 namespace TollCalculator.TollFree
 {
-    public class TollFreeProvider(IHolidayProvider holidayProvider) : ITollFreeProvider
+    public class TollFreeService(IHolidayProvider holidayProvider) : ITollFreeService
     {
         public bool IsTollFreeDate(DateTime dateTime) =>
             IsWeekend(dateTime) ||
