@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TollCalculator.TollFree.Holidays;
+﻿namespace TollCalculator.TollFree.Holidays;
 public class HolidayProvider : IHolidayProvider
 {
     public IEnumerable<DateTime> GetHolidays(int year)
@@ -17,12 +11,12 @@ public class HolidayProvider : IHolidayProvider
         return holidays.Distinct().OrderBy(date => date);
     }
 
-    public bool IsDayBeforeHoliday(DateTime date)
+    public IEnumerable<DateTime> GetDaysBeforeHoliday(DateTime date)
     {
         var daysBeforeHoliday = new List<DateTime>();
         daysBeforeHoliday.AddRange(GetDaysBeforeFixedHolidays(date.Year));
         daysBeforeHoliday.AddRange(GetDaysBeforeDynamicHolidays(date.Year));
-        return daysBeforeHoliday.Any(dayBeforeHoliday => dayBeforeHoliday.Date == date);
+        return daysBeforeHoliday;
     }
 
     private IEnumerable<DateTime> GetEasterHolidayDates(int year)

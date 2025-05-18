@@ -91,7 +91,7 @@ public class HolidayProviderTests
 
     private void WhenGettingDayBeforHolidays(DateTime dateToCheck)
     {
-        isDayBeforeHoliday = holidayProvider!.IsDayBeforeHoliday(dateToCheck);
+        isDayBeforeHoliday = holidayProvider!.GetDaysBeforeHoliday(dateToCheck).Any(dayBeforeHoliday => dayBeforeHoliday.Date == dateToCheck.Date);
     }
 
     private void ThenResultContains(IEnumerable<DateTime> expectedResult)
