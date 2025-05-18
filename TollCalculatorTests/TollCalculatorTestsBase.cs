@@ -1,6 +1,6 @@
 ﻿using Moq;
 using TollCalculator;
-using TollCalculator.TollFree;
+using TollCalculator.Services;
 
 namespace TollCalculatorTests;
 

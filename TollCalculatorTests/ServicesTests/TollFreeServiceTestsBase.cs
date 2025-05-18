@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Moq;
-using TollCalculator;
-using TollCalculator.TollFree;
-using TollCalculator.TollFree.Holidays;
+﻿using Moq;
+using TollCalculator.Services;
+using TollCalculator.Services.Holidays;
 
-namespace TollCalculatorTests;
+namespace TollCalculatorTests.ServicesTests;
 
 public class TollFreeServiceTestsBase
 {

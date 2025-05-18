@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using TollCalculator;
 
-namespace TollCalculatorTests;
+namespace TollCalculatorTests.ServicesTests;
 
 public class TollFreeServiceTests : TollFreeServiceTestsBase
 {

@@ -1,7 +1,7 @@
 using FluentAssertions;
-using TollCalculator.TollFree.Holidays;
+using TollCalculator.Services.Holidays;
 
-namespace TollCalculatorTests;
+namespace TollCalculatorTests.ServicesTests.Holidays;
 
 public class HolidayProviderTests
 {
