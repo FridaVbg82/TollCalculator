@@ -1,4 +1,4 @@
-﻿namespace TollCalculator.TollFree.Holidays;
+﻿namespace TollCalculator.Services.Holidays;
 
 public interface IHolidayProvider
 {

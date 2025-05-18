@@ -1,4 +1,4 @@
-﻿namespace TollCalculator.TollFree;
+﻿namespace TollCalculator.Services;
 
 public interface ITollFreeService
 {

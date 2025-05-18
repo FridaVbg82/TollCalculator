@@ -1,7 +1,7 @@
 ﻿using TollCalculator.Common;
-using TollCalculator.TollFree.Holidays;
+using TollCalculator.Services.Holidays;
 
-namespace TollCalculator.TollFree;
+namespace TollCalculator.Services;
 
 public class TollFreeService(IHolidayProvider holidayProvider) : ITollFreeService
 {

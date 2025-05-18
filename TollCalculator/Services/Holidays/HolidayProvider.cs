@@ -1,4 +1,4 @@
-﻿namespace TollCalculator.TollFree.Holidays;
+﻿namespace TollCalculator.Services.Holidays;
 public class HolidayProvider : IHolidayProvider
 {
     public IEnumerable<DateTime> GetHolidays(int year)

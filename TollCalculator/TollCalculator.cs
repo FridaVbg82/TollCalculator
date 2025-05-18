@@ -1,6 +1,5 @@
-﻿using System;
-using TollCalculator.Common;
-using TollCalculator.TollFree;
+﻿using TollCalculator.Common;
+using TollCalculator.Services;
 
 namespace TollCalculator;
 
@@ -31,7 +30,7 @@ public class TollCalculator(ITollFreeService tollFreeService)
         return Math.Min(fee, Constants.DAILY_MAXIMUM_FEE);
     }
 
-    private static void ValidateDateRange(IEnumerable<DateTime> dates)
+    private void ValidateDateRange(IEnumerable<DateTime> dates)
     {
         if (!dates.Any())
             throw new ArgumentException("Expected at least one date");
@@ -66,12 +65,12 @@ public class TollCalculator(ITollFreeService tollFreeService)
         };
     }
 
-    private static bool IsMultipleDays(IEnumerable<DateTime> dates)
+    private bool IsMultipleDays(IEnumerable<DateTime> dates)
     {
         return dates.DistinctBy(date => date.Date).Count() != 1;
     }
 
-    static List<List<DateTime>> SplitDateTimeOnHour(IEnumerable<DateTime> dateTimes)
+    private List<List<DateTime>> SplitDateTimeOnHour(IEnumerable<DateTime> dateTimes)
     {
         List<List<DateTime>> hourlyPassageList = new List<List<DateTime>>();
         List<DateTime> currentHourList = new List<DateTime>();
