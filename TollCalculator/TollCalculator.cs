@@ -9,20 +9,20 @@ public class TollCalculator(ITollFreeService tollFreeService)
  * Calculate the total toll fee for one day
  *
  * @param vehicle - the vehicle
- * @param dates   - date and time of all passes on one day
+ * @param timeStampForPassages   - date and time of all passes on one day
  * @return - the total toll fee for that day
  */
-    public int GetTollFee(Vehicle vehicle, IEnumerable<DateTime> dates)
+    public int GetTollFee(Vehicle vehicle, IEnumerable<DateTime> timeStampForPassages)
     {
-        ValidateDateRange(dates);
+        ValidateDateRange(timeStampForPassages);
 
-        // Make sure the dates are in order
-        dates = dates.OrderBy(date => date);
-        if (tollFreeService.IsTollFreeDate(dates.First()) || tollFreeService.IsTollFreeVehicle(vehicle)) 
+        // Make sure the timeStampForPassages are in order
+        timeStampForPassages = timeStampForPassages.OrderBy(date => date);
+        if (tollFreeService.IsTollFreeDate(timeStampForPassages.First()) || tollFreeService.IsTollFreeVehicle(vehicle)) 
             return 0;
 
         var fee = 0;
-        foreach (var hourlyPassages in SplitDateTimeOnHour(dates))
+        foreach (var hourlyPassages in SplitDateTimeOnHour(timeStampForPassages))
         {
             fee += CalculateFeeForHour(hourlyPassages);
         }
