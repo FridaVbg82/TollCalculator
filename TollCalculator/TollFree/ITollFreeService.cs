@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace TollCalculator.TollFree;
 
-namespace TollCalculator.TollFree
+public interface ITollFreeService
 {
-    public interface ITollFreeService
-    {
-        bool IsTollFreeDate(DateTime dateTime);
-        bool IsTollFreeVehicle(Vehicle vehicle);
-    }
+    bool IsTollFreeDate(DateTime dateTime);
+    bool IsTollFreeVehicle(Vehicle vehicle);
 }
